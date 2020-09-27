@@ -30,10 +30,21 @@ public class CamundaController {
 	@Autowired
 	FormService formService;
 	
-	@GetMapping(path = "/startProcess", produces = "application/json")
-    public @ResponseBody FormFieldsDto get() {
+	@GetMapping(path = "/startClientProcess", produces = "application/json")
+    public @ResponseBody FormFieldsDto startClientProcess() {
 		
 		ProcessInstance pi = runtimeService.startProcessInstanceByKey("Client_ProcessId");
+		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
+		TaskFormData tfd = formService.getTaskFormData(task.getId());
+		List<FormField> properties = tfd.getFormFields();
+		
+        return new FormFieldsDto(task.getId(), pi.getId(), properties);
+    }
+	
+	@GetMapping(path = "/startDealerProcess", produces = "application/json")
+    public @ResponseBody FormFieldsDto startDealerProcess() {
+		
+		ProcessInstance pi = runtimeService.startProcessInstanceByKey("Dealer_ProcessId");
 		Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
 		TaskFormData tfd = formService.getTaskFormData(task.getId());
 		List<FormField> properties = tfd.getFormFields();
