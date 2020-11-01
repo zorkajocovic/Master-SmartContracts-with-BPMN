@@ -14,11 +14,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 
 import com.Service.services.AppUserService;
 import model.Appuser;
 
-public class AuthenticationTokenFiler extends UsernamePasswordAuthenticationFilter  {
+public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter  {
 	
     @Autowired
     private JWTUtils jwtTokenUtil;

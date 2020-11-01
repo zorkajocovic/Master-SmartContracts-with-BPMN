@@ -7,12 +7,11 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
 
-import com.Service.RentACar.Constants;
 import com.Service.contracts.RentAcarContract;
 
 @Service
 public class Web3Service {
-
+/*
 	  private Web3j web3j = Web3j.build(new HttpService());
 
 	    //Create and Init the default Web3J connection
@@ -45,5 +44,5 @@ public class Web3Service {
 	        }
 	    }
 
-	  
+	  */
 }

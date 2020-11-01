@@ -18,7 +18,7 @@
     <bpmn:messageFlow id="MessageFlow_06vdhq8" sourceRef="Task_0uwyy5g" targetRef="Task_1x6o7kn" />
     <bpmn:messageFlow id="MessageFlow_0liofsv" sourceRef="Task_1y04tpf" targetRef="Task_12n0xs2" />
   </bpmn:collaboration>
-  <bpmn:process id="Client_ProcessId" isExecutable="true">
+  <bpmn:process id="Client_ProcessId" isExecutable="true" camunda:candidateStarterUsers="demo">
     <bpmn:sequenceFlow id="SequenceFlow_1g718tx" sourceRef="StartEvent_08ze500" targetRef="Task_1jshvu8" />
     <bpmn:sequenceFlow id="SequenceFlow_1nuy71o" sourceRef="Task_1jshvu8" targetRef="Task_04ahies" />
     <bpmn:sequenceFlow id="SequenceFlow_0ohxfun" sourceRef="Task_0bjvnh1" targetRef="EndEvent_0aas03n" />
@@ -41,7 +41,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${pay}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="SequenceFlow_1agpcm3" sourceRef="Task_1y04tpf" targetRef="Task_0bjvnh1" />
-    <bpmn:userTask id="Task_0bjvnh1" name="Get a car">
+    <bpmn:userTask id="Task_0bjvnh1" name="Get a car" camunda:assignee="zorkajocovic@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="collectedCar" label="Collected:" type="boolean" defaultValue="true" />
@@ -50,7 +50,7 @@
       <bpmn:incoming>SequenceFlow_1agpcm3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0ohxfun</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_1nwcxih" name="Start payment transaction">
+    <bpmn:userTask id="Task_1nwcxih" name="Start payment transaction" camunda:assignee="zorkajocovic@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="pay" label="Pay:" type="boolean" defaultValue="true" />
@@ -69,7 +69,7 @@
       <bpmn:incoming>SequenceFlow_1a5mk1w</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0jlhv6a</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="Task_0uwyy5g" name="Confirm that you have read a receipt">
+    <bpmn:userTask id="Task_0uwyy5g" name="Confirm that you have read a receipt" camunda:assignee="zorkajocovic@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="price" label="Price:" type="long" />
@@ -78,7 +78,7 @@
       <bpmn:incoming>SequenceFlow_0m4otje</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_03x8aka</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_0w2n2u8" name="Confirm that you have read car documents">
+    <bpmn:userTask id="Task_0w2n2u8" name="Confirm that you have read car documents" camunda:assignee="zorkajocovic@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="readDocuments" label="Agree with documents?" type="boolean" defaultValue="true" />
@@ -103,19 +103,19 @@
     <bpmn:startEvent id="StartEvent_08ze500" name="Order initialized">
       <bpmn:outgoing>SequenceFlow_1g718tx</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="Task_1jshvu8" name="Order car">
+    <bpmn:userTask id="Task_1jshvu8" name="Order car" camunda:assignee="zorkajocovic@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="type" label="Type" type="string" />
-          <camunda:formField id="model" label="Model" type="string" />
-          <camunda:formField id="customerName" label="Customer Name" type="string" />
-          <camunda:formField id="customerSurname" label="Customer Surname" type="string" />
+          <camunda:formField id="type" label="Type:" type="string" />
+          <camunda:formField id="model" label="Model:" type="string" />
+          <camunda:formField id="customerName" label="Customer Name:" type="string" />
+          <camunda:formField id="customerSurname" label="Customer Surname:" type="string" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1g718tx</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1nuy71o</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_04ahies" name="Get contract">
+    <bpmn:userTask id="Task_04ahies" name="Get contract" camunda:assignee="zorkajocovic@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="customerName" label="Customer Name:" type="string" defaultValue="true" />
@@ -134,7 +134,7 @@
       <bpmn:outgoing>SequenceFlow_1agpcm3</bpmn:outgoing>
     </bpmn:sendTask>
   </bpmn:process>
-  <bpmn:process id="Dealer_ProcessId" isExecutable="true">
+  <bpmn:process id="Dealer_ProcessId" isExecutable="true" camunda:candidateStarterUsers="demo">
     <bpmn:startEvent id="StartEvent_1o09fjb" name="order received">
       <bpmn:outgoing>SequenceFlow_0ul28mx</bpmn:outgoing>
     </bpmn:startEvent>
@@ -146,7 +146,7 @@
       <bpmn:incoming>SequenceFlow_0k9dgle</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1w8t8c5</bpmn:outgoing>
     </bpmn:sendTask>
-    <bpmn:userTask id="Task_06r5vq1" name="Wait for client&#39;s agreement">
+    <bpmn:userTask id="Task_06r5vq1" name="Wait for client&#39;s agreement" camunda:candidateUsers="mare@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="agreement" label="Client agreed:" type="boolean" />
@@ -166,7 +166,7 @@
       <bpmn:incoming>SequenceFlow_1w8t8c5</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_11sx7um</bpmn:outgoing>
     </bpmn:sendTask>
-    <bpmn:userTask id="Task_1ppclx0" name="Wait for money confirmation">
+    <bpmn:userTask id="Task_1ppclx0" name="Wait for money confirmation" camunda:assignee="mare@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="payed" label="Payed?" type="boolean" />
@@ -178,7 +178,7 @@
     <bpmn:endEvent id="EndEvent_0vlyv6h">
       <bpmn:incoming>SequenceFlow_0zqlb50</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="Task_01t4xl5" name="Hand over a car">
+    <bpmn:userTask id="Task_01t4xl5" name="Hand over a car" camunda:assignee="mare@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="sendCar" label="Sent:" type="boolean" defaultValue="true" />
@@ -188,7 +188,7 @@
       <bpmn:outgoing>SequenceFlow_0zqlb50</bpmn:outgoing>
     </bpmn:userTask>
   </bpmn:process>
-  <bpmn:process id="Blockchain_ProcessId" isExecutable="true">
+  <bpmn:process id="Blockchain_ProcessId" isExecutable="true" camunda:candidateStarterUsers="demo">
     <bpmn:startEvent id="StartEvent_0d7q806" name="participands agreed">
       <bpmn:outgoing>SequenceFlow_1hhci5x</bpmn:outgoing>
     </bpmn:startEvent>

@@ -37,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configureAuthentication( AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 		authenticationManagerBuilder.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
 	}
+
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -50,9 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Bean
-	public AuthenticationTokenFiler authenticationTokenFilterBean()
+	public AuthenticationTokenFilter authenticationTokenFilterBean()
 			throws Exception {
-		AuthenticationTokenFiler authenticationTokenFilter = new AuthenticationTokenFiler();
+		AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter();
 		authenticationTokenFilter
 				.setAuthenticationManager(authenticationManagerBean());
 		return authenticationTokenFilter;

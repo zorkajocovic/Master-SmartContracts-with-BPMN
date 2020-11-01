@@ -3,16 +3,17 @@ package com.Service.services;
 import java.util.List;
 
 import org.camunda.bpm.engine.IdentityService;
-import org.jvnet.hk2.annotations.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import com.Service.repositories.AppuserRepository;
 import com.Service.security.JWTUtils;
 import com.Service.security.MyUserDetailsService;
 import com.Service.security.TokenDto;
+
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import model.Appuser;
 
