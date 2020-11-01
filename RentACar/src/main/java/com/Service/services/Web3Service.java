@@ -20,7 +20,7 @@ public class Web3Service {
 	        this.web3j = Web3j.build(new HttpService(provider));
 	    }
 
-	    public String getDeployedContractAddress() {
+	    public RentAcarContract getDeployedContractAddress() {
 
 	        String contractAddress = "";
 
@@ -36,14 +36,13 @@ public class Web3Service {
 	 									                    new DefaultGasProvider()).send();
 
 	            contractAddress = contract.getContractAddress();
-
 	            System.out.println("Smart contract deployed to address " + contractAddress);
-	            
+	            return contract;
+
 	        } catch (Exception ex) {
 	            System.out.println(Constants.PLEASE_SUPPLY_REAL_DATA);
-	            return Constants.PLEASE_SUPPLY_REAL_DATA;
+	            return null;
 	        }
-	        return contractAddress;
 	    }
 
 	  

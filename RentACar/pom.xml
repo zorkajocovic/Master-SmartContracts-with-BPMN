@@ -23,7 +23,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-
+ 		<dependency> 
+		 	<groupId>org.springframework.boot</groupId> 
+		 	<artifactId>spring-boot-starter-security</artifactId> 
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -36,8 +39,35 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+			<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		 <dependency> 
+		 	<groupId>org.springframework.boot</groupId> 
+		 	<artifactId>spring-boot-starter-security</artifactId> 
 		</dependency>
 		<dependency>
 		  <groupId>org.springframework.boot</groupId>
@@ -59,8 +89,8 @@
 		<groupId>org.camunda.bpm</groupId>
 		<artifactId>camunda-external-task-client</artifactId>
 		<version>1.0.0</version>
-	</dependency>
-	
+	</dependency>	
+
 	 <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>

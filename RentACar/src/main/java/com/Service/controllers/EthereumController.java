@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Service.contracts.RentAcarContract;
 import com.Service.services.Web3Service;
 
 @RequestMapping(value = "ethereum")
@@ -27,7 +28,7 @@ public class EthereumController {
 	@GetMapping(path = "/deployContract", produces = "application/json")
     public @ResponseBody ResponseEntity<String> deployContract() {
 		
-		String contractAddress = web3Service.getDeployedContractAddress();
-		return new ResponseEntity<String>(contractAddress,  HttpStatus.OK); 
+		RentAcarContract contractAddress = web3Service.getDeployedContractAddress();
+		return new ResponseEntity<String>(contractAddress.getContractAddress(),  HttpStatus.OK); 
 	}
 }

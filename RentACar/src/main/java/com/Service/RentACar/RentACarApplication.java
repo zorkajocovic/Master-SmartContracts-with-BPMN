@@ -2,10 +2,12 @@ package com.Service.RentACar;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -14,8 +16,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @SpringBootApplication
 @Configuration
 @EnableWebMvc
-@ComponentScan(value = {"com.Service.*"})
-
+@ComponentScan(value = {"com.Service.*", "com.Service.services.AppUserService", "com.example.security.*"})
+@EntityScan(value = {"model"})
+@EnableJpaRepositories(value = {"com.Service.repositories"})
 public class RentACarApplication {
 
     public static void main(String[] args) throws Exception {
