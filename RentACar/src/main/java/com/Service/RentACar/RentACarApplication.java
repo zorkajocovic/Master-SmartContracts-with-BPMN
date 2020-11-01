@@ -25,7 +25,7 @@ public class RentACarApplication {
 		SpringApplication.run(RentACarApplication.class, args);
 	}
 	
-/*	@Bean
+	@Bean
 	public FilterRegistrationBean<CorsFilter> corsFilter() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
@@ -37,5 +37,5 @@ public class RentACarApplication {
 		FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<CorsFilter>(new CorsFilter(source));
 		bean.setOrder(0);
 		return bean;
-	}*/
+	}
 }

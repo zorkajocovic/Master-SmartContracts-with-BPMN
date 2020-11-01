@@ -26,7 +26,6 @@ import model.Appuser;
 	@Autowired
 	AppUserService userService;
 	
-	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<?> post(@RequestBody LoginRequestDto loginRequestDto) {
 		
@@ -45,7 +44,6 @@ import model.Appuser;
 		}
     }
 	
-	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(value = "/getCurrentUser", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<Appuser> getCurrentUser() {
 		
@@ -53,7 +51,6 @@ import model.Appuser;
         return new ResponseEntity<>(currentUser, HttpStatus.OK);
     }
 	
-	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
     public ResponseEntity<?> signout() {
 		

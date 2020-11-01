@@ -44,7 +44,7 @@
     <bpmn:userTask id="Task_0bjvnh1" name="Get a car" camunda:assignee="zorkajocovic@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="collectedCar" label="Collected:" type="boolean" defaultValue="true" />
+          <camunda:formField id="collectedCar" label="Collected:" type="boolean" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1agpcm3</bpmn:incoming>
@@ -81,13 +81,13 @@
     <bpmn:userTask id="Task_0w2n2u8" name="Confirm that you have read car documents" camunda:assignee="zorkajocovic@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="readDocuments" label="Agree with documents?" type="boolean" defaultValue="true" />
+          <camunda:formField id="readDocuments" label="Agree with documents?" type="boolean" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0gkx5t4</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0m4otje</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sendTask id="Task_07bc81y" name="Accepted contract" camunda:expression="true">
+    <bpmn:sendTask id="Task_07bc81y" name="Accepted contract" camunda:class="com.Service.camunda.services.AcceptedOffer">
       <bpmn:incoming>SequenceFlow_0ytqy8r</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0gkx5t4</bpmn:outgoing>
     </bpmn:sendTask>
@@ -96,7 +96,7 @@
       <bpmn:outgoing>SequenceFlow_1yrd8it</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0ytqy8r</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sendTask id="Task_0fbz27x" name="Refused contract / Notify dealer" camunda:expression="true">
+    <bpmn:sendTask id="Task_0fbz27x" name="Refused contract / Notify dealer" camunda:class="com.Service.camunda.services.RefusedOffer">
       <bpmn:incoming>SequenceFlow_1yrd8it</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1a5mk1w</bpmn:outgoing>
     </bpmn:sendTask>
@@ -129,7 +129,7 @@
       <bpmn:incoming>SequenceFlow_1nuy71o</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1vf75eu</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sendTask id="Task_1y04tpf" name="Client payed" camunda:expression="true">
+    <bpmn:sendTask id="Task_1y04tpf" name="Client payed" camunda:class="com.Service.camunda.services.ClientPayment">
       <bpmn:incoming>SequenceFlow_1qlzo8s</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1agpcm3</bpmn:outgoing>
     </bpmn:sendTask>
@@ -138,11 +138,11 @@
     <bpmn:startEvent id="StartEvent_1o09fjb" name="order received">
       <bpmn:outgoing>SequenceFlow_0ul28mx</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sendTask id="Task_1fv2tmf" name="Send contract to client" camunda:expression="true">
+    <bpmn:sendTask id="Task_1fv2tmf" name="Send contract to client" camunda:class="com.Service.camunda.services.SendOffer">
       <bpmn:incoming>SequenceFlow_0ul28mx</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0nomq5u</bpmn:outgoing>
     </bpmn:sendTask>
-    <bpmn:sendTask id="Task_0dwvu5z" name="Send car documents via email" camunda:class="SendDocuments">
+    <bpmn:sendTask id="Task_0dwvu5z" name="Send car documents via email" camunda:class="com.Service.camunda.services.SendDocuments">
       <bpmn:incoming>SequenceFlow_0k9dgle</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1w8t8c5</bpmn:outgoing>
     </bpmn:sendTask>
@@ -162,7 +162,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_11sx7um" sourceRef="Task_0w6umpe" targetRef="Task_1ppclx0" />
     <bpmn:sequenceFlow id="SequenceFlow_1lnk7zk" sourceRef="Task_1ppclx0" targetRef="Task_01t4xl5" />
     <bpmn:sequenceFlow id="SequenceFlow_0zqlb50" sourceRef="Task_01t4xl5" targetRef="EndEvent_0vlyv6h" />
-    <bpmn:sendTask id="Task_0w6umpe" name="Send car receipt" camunda:expression="true">
+    <bpmn:sendTask id="Task_0w6umpe" name="Send car receipt" camunda:class="com.Service.camunda.services.SendReceipt">
       <bpmn:incoming>SequenceFlow_1w8t8c5</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_11sx7um</bpmn:outgoing>
     </bpmn:sendTask>
@@ -189,38 +189,38 @@
     </bpmn:userTask>
   </bpmn:process>
   <bpmn:process id="Blockchain_ProcessId" isExecutable="true" camunda:candidateStarterUsers="demo">
-    <bpmn:startEvent id="StartEvent_0d7q806" name="participands agreed">
-      <bpmn:outgoing>SequenceFlow_1hhci5x</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:serviceTask id="Task_0ofd7jh" name="Add contract to blockchain" camunda:class="AddContract">
-      <bpmn:incoming>SequenceFlow_1hhci5x</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0dlm0h3</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1b88qd9" sourceRef="Task_12n0xs2" targetRef="Task_1ux1dtd" />
     <bpmn:sequenceFlow id="SequenceFlow_0lh3gim" sourceRef="Task_1ux1dtd" targetRef="EndEvent_1se2yna" />
     <bpmn:sequenceFlow id="SequenceFlow_1hhci5x" sourceRef="StartEvent_0d7q806" targetRef="Task_0ofd7jh" />
     <bpmn:sequenceFlow id="SequenceFlow_0dlm0h3" sourceRef="Task_0ofd7jh" targetRef="Task_1fie22i" />
     <bpmn:sequenceFlow id="SequenceFlow_1aw78te" sourceRef="Task_1fie22i" targetRef="Task_1x6o7kn" />
     <bpmn:sequenceFlow id="SequenceFlow_0w7f5zq" sourceRef="Task_1x6o7kn" targetRef="Task_12n0xs2" />
-    <bpmn:serviceTask id="Task_1fie22i" name="Cient has read car documents / add to blockchain" camunda:class="CarDocumentsConfirm">
-      <bpmn:incoming>SequenceFlow_0dlm0h3</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1aw78te</bpmn:outgoing>
+    <bpmn:serviceTask id="Task_1ux1dtd" name="Car delivered confirmation / add to blockchain" camunda:class="com.Service.blockchain.CarDelivery">
+      <bpmn:incoming>SequenceFlow_1b88qd9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0lh3gim</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Task_1x6o7kn" name="Cient  has read receipt / add to blockchain" camunda:class="CarReceiptConfirm">
-      <bpmn:incoming>SequenceFlow_1aw78te</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0w7f5zq</bpmn:outgoing>
+    <bpmn:serviceTask id="Task_12n0xs2" name="Client payed car receipt / add to blockchain" camunda:class="com.Service.blockchain.PayedRent">
+      <bpmn:incoming>SequenceFlow_0w7f5zq</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1b88qd9</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="EndEvent_1se2yna">
       <bpmn:incoming>SequenceFlow_0lh3gim</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="Task_12n0xs2" name="Client payed car receipt / add to blockchain" camunda:expression="true">
-      <bpmn:incoming>SequenceFlow_0w7f5zq</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1b88qd9</bpmn:outgoing>
+    <bpmn:serviceTask id="Task_1x6o7kn" name="Cient  has read receipt / add to blockchain" camunda:class="com.Service.blockchain.CarReceiptConfirmation">
+      <bpmn:incoming>SequenceFlow_1aw78te</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0w7f5zq</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Task_1ux1dtd" name="Car delivered confirmation / add to blockchain" camunda:expression="true">
-      <bpmn:incoming>SequenceFlow_1b88qd9</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0lh3gim</bpmn:outgoing>
+    <bpmn:serviceTask id="Task_1fie22i" name="Cient has read car documents / add to blockchain" camunda:class="com.Service.blockchain.CarDocumentsConfirmation">
+      <bpmn:incoming>SequenceFlow_0dlm0h3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1aw78te</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_0ofd7jh" name="Add contract to blockchain" camunda:class="com.Service.blockchain.AddContract">
+      <bpmn:incoming>SequenceFlow_1hhci5x</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0dlm0h3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_0d7q806" name="participands agreed">
+      <bpmn:outgoing>SequenceFlow_1hhci5x</bpmn:outgoing>
+    </bpmn:startEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1g3rlnn">
