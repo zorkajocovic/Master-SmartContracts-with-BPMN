@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @SpringBootApplication
 @Configuration
 @EnableWebMvc
-@ComponentScan(value = {"com.Service.*"})
+@ComponentScan(value = {"com.Service.*", "com.Service.blockchain.services", "com.Service.camunda.services", "com.Service.controllers"})
 @EntityScan(value = {"model"})
 @EnableJpaRepositories(value = {"com.Service.repositories"})
 public class RentACarApplication {

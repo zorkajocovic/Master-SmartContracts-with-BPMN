@@ -5,8 +5,6 @@
     <bpmn:participant id="Client" name="Client" processRef="Client_ProcessId" />
     <bpmn:participant id="Dealer" name="Rent A Car Company" processRef="Dealer_ProcessId" />
     <bpmn:participant id="Blockchain" name="Blockchain" processRef="Blockchain_ProcessId" />
-    <bpmn:messageFlow id="MessageFlow_16q4aey" sourceRef="Task_1jshvu8" targetRef="StartEvent_1o09fjb" />
-    <bpmn:messageFlow id="MessageFlow_00ed2bw" sourceRef="Task_1fv2tmf" targetRef="Task_04ahies" />
     <bpmn:messageFlow id="MessageFlow_10g78mi" sourceRef="Task_12n0xs2" targetRef="Task_1ppclx0" />
     <bpmn:messageFlow id="MessageFlow_1r7hepz" sourceRef="Task_01t4xl5" targetRef="Task_0bjvnh1" />
     <bpmn:messageFlow id="MessageFlow_1p3w2ds" sourceRef="Task_0bjvnh1" targetRef="Task_1ux1dtd" />
@@ -17,6 +15,8 @@
     <bpmn:messageFlow id="MessageFlow_1wpy9bz" sourceRef="Task_0w6umpe" targetRef="Task_0uwyy5g" />
     <bpmn:messageFlow id="MessageFlow_06vdhq8" sourceRef="Task_0uwyy5g" targetRef="Task_1x6o7kn" />
     <bpmn:messageFlow id="MessageFlow_0liofsv" sourceRef="Task_1y04tpf" targetRef="Task_12n0xs2" />
+    <bpmn:messageFlow id="MessageFlow_03mjsyx" sourceRef="Task_1jshvu8" targetRef="StartEvent_1o09fjb" />
+    <bpmn:messageFlow id="MessageFlow_16sh740" sourceRef="Task_1fv2tmf" targetRef="Task_04ahies" />
   </bpmn:collaboration>
   <bpmn:process id="Client_ProcessId" isExecutable="true" camunda:candidateStarterUsers="demo">
     <bpmn:sequenceFlow id="SequenceFlow_1g718tx" sourceRef="StartEvent_08ze500" targetRef="Task_1jshvu8" />
@@ -118,12 +118,12 @@
     <bpmn:userTask id="Task_04ahies" name="Get contract" camunda:assignee="zorkajocovic@yahoo.com">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="customerName" label="Customer Name:" type="string" defaultValue="true" />
-          <camunda:formField id="customerSurname" label="Customer Surname:" type="string" />
-          <camunda:formField id="dealerCompany" label="Dealer Company:" type="string" />
-          <camunda:formField id="price" label="Price:" type="string" />
-          <camunda:formField id="contractText" label="Text:" type="string" />
-          <camunda:formField id="date" label="Date:" type="date" />
+          <camunda:formField id="customerName" label="Customer Name:" type="string" defaultValue="${customerName}" />
+          <camunda:formField id="customerSurname" label="Customer Surname:" type="string" defaultValue="${customerSurame}" />
+          <camunda:formField id="dealerCompany" label="Dealer Company:" type="string" defaultValue="${dealerCompany}" />
+          <camunda:formField id="price" label="Price:" type="long" defaultValue="${price}" />
+          <camunda:formField id="contractText" label="Contract Text:" type="string" defaultValue="${contractText}" />
+          <camunda:formField id="date" label="Date:" type="string" defaultValue="${date}" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1nuy71o</bpmn:incoming>
@@ -135,13 +135,6 @@
     </bpmn:sendTask>
   </bpmn:process>
   <bpmn:process id="Dealer_ProcessId" isExecutable="true" camunda:candidateStarterUsers="demo">
-    <bpmn:startEvent id="StartEvent_1o09fjb" name="order received">
-      <bpmn:outgoing>SequenceFlow_0ul28mx</bpmn:outgoing>
-    </bpmn:startEvent>
-    <bpmn:sendTask id="Task_1fv2tmf" name="Send contract to client" camunda:class="com.Service.camunda.services.SendOffer">
-      <bpmn:incoming>SequenceFlow_0ul28mx</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0nomq5u</bpmn:outgoing>
-    </bpmn:sendTask>
     <bpmn:sendTask id="Task_0dwvu5z" name="Send car documents via email" camunda:class="com.Service.camunda.services.SendDocuments">
       <bpmn:incoming>SequenceFlow_0k9dgle</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1w8t8c5</bpmn:outgoing>
@@ -187,6 +180,24 @@
       <bpmn:incoming>SequenceFlow_1lnk7zk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0zqlb50</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:userTask id="Task_1fv2tmf" name="Send contract to client" camunda:assignee="mare@yahoo.com">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="type" label="Type:" type="string" defaultValue="${type}" />
+          <camunda:formField id="model" label="Mode:" type="string" defaultValue="${model}" />
+          <camunda:formField id="customerName" label="Customer Name:" type="string" defaultValue="${customerName}" />
+          <camunda:formField id="customerSurame" label="Customer Surname:" type="string" defaultValue="${customerSurame}" />
+          <camunda:formField id="dealerCompany" label="Dealer Company:" type="string" defaultValue="${dealerCompany}" />
+          <camunda:formField id="price" label="Price:" type="string" />
+          <camunda:formField id="contractText" label="Contract Text:" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0ul28mx</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0nomq5u</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_1o09fjb" name="order received">
+      <bpmn:outgoing>SequenceFlow_0ul28mx</bpmn:outgoing>
+    </bpmn:startEvent>
   </bpmn:process>
   <bpmn:process id="Blockchain_ProcessId" isExecutable="true" camunda:candidateStarterUsers="demo">
     <bpmn:sequenceFlow id="SequenceFlow_1b88qd9" sourceRef="Task_12n0xs2" targetRef="Task_1ux1dtd" />
@@ -195,32 +206,32 @@
     <bpmn:sequenceFlow id="SequenceFlow_0dlm0h3" sourceRef="Task_0ofd7jh" targetRef="Task_1fie22i" />
     <bpmn:sequenceFlow id="SequenceFlow_1aw78te" sourceRef="Task_1fie22i" targetRef="Task_1x6o7kn" />
     <bpmn:sequenceFlow id="SequenceFlow_0w7f5zq" sourceRef="Task_1x6o7kn" targetRef="Task_12n0xs2" />
-    <bpmn:serviceTask id="Task_1ux1dtd" name="Car delivered confirmation / add to blockchain" camunda:class="com.Service.blockchain.CarDelivery">
-      <bpmn:incoming>SequenceFlow_1b88qd9</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0lh3gim</bpmn:outgoing>
+    <bpmn:startEvent id="StartEvent_0d7q806" name="participands agreed">
+      <bpmn:outgoing>SequenceFlow_1hhci5x</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Task_0ofd7jh" name="Add contract to blockchain" camunda:class="com.Service.blockchain.services.AddContract">
+      <bpmn:incoming>SequenceFlow_1hhci5x</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0dlm0h3</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Task_12n0xs2" name="Client payed car receipt / add to blockchain" camunda:class="com.Service.blockchain.PayedRent">
-      <bpmn:incoming>SequenceFlow_0w7f5zq</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1b88qd9</bpmn:outgoing>
+    <bpmn:serviceTask id="Task_1fie22i" name="Cient has read car documents / add to blockchain" camunda:class="com.Service.blockchain.services.CarDocumentsConfirmation">
+      <bpmn:incoming>SequenceFlow_0dlm0h3</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1aw78te</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_1x6o7kn" name="Cient  has read receipt / add to blockchain" camunda:class="com.Service.blockchain.services.CarReceiptConfirmation">
+      <bpmn:incoming>SequenceFlow_1aw78te</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0w7f5zq</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="EndEvent_1se2yna">
       <bpmn:incoming>SequenceFlow_0lh3gim</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="Task_1x6o7kn" name="Cient  has read receipt / add to blockchain" camunda:class="com.Service.blockchain.CarReceiptConfirmation">
-      <bpmn:incoming>SequenceFlow_1aw78te</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0w7f5zq</bpmn:outgoing>
+    <bpmn:serviceTask id="Task_12n0xs2" name="Client payed car receipt / add to blockchain" camunda:class="com.Service.blockchain.services.PayedRent">
+      <bpmn:incoming>SequenceFlow_0w7f5zq</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1b88qd9</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Task_1fie22i" name="Cient has read car documents / add to blockchain" camunda:class="com.Service.blockchain.CarDocumentsConfirmation">
-      <bpmn:incoming>SequenceFlow_0dlm0h3</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1aw78te</bpmn:outgoing>
+    <bpmn:serviceTask id="Task_1ux1dtd" name="Car delivered confirmation / add to blockchain" camunda:class="com.Service.blockchain.services.CarDelivery">
+      <bpmn:incoming>SequenceFlow_1b88qd9</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0lh3gim</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Task_0ofd7jh" name="Add contract to blockchain" camunda:class="com.Service.blockchain.AddContract">
-      <bpmn:incoming>SequenceFlow_1hhci5x</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0dlm0h3</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:startEvent id="StartEvent_0d7q806" name="participands agreed">
-      <bpmn:outgoing>SequenceFlow_1hhci5x</bpmn:outgoing>
-    </bpmn:startEvent>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1g3rlnn">
@@ -241,27 +252,18 @@
         <dc:Bounds x="713" y="92" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_0s0kyvz_di" bpmnElement="Dealer">
-        <dc:Bounds x="616" y="873" width="1486" height="241" />
+        <dc:Bounds x="439" y="862" width="1663" height="321" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="StartEvent_1o09fjb_di" bpmnElement="StartEvent_1o09fjb">
-        <dc:Bounds x="686" y="993" width="36" height="36" />
+        <dc:Bounds x="531" y="993" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="669" y="1036" width="71" height="14" />
+          <dc:Bounds x="514" y="1036" width="71" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="MessageFlow_16q4aey_di" bpmnElement="MessageFlow_16q4aey">
-        <di:waypoint x="798" y="172" />
-        <di:waypoint x="798" y="597" />
-        <di:waypoint x="704" y="597" />
-        <di:waypoint x="704" y="993" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0ul28mx_di" bpmnElement="SequenceFlow_0ul28mx">
-        <di:waypoint x="722" y="1011" />
-        <di:waypoint x="862" y="1011" />
+        <di:waypoint x="567" y="1011" />
+        <di:waypoint x="730" y="1011" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="SendTask_0gebu7v_di" bpmnElement="Task_1fv2tmf">
-        <dc:Bounds x="862" y="971" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1nuy71o_di" bpmnElement="SequenceFlow_1nuy71o">
         <di:waypoint x="813" y="132" />
         <di:waypoint x="873" y="132" />
@@ -269,10 +271,6 @@
       <bpmndi:BPMNShape id="UserTask_04x8e4q_di" bpmnElement="Task_04ahies">
         <dc:Bounds x="873" y="92" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="MessageFlow_00ed2bw_di" bpmnElement="MessageFlow_00ed2bw">
-        <di:waypoint x="900" y="971" />
-        <di:waypoint x="900" y="172" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1nf89xh_di" bpmnElement="Blockchain">
         <dc:Bounds x="927" y="462" width="1373" height="281" />
       </bpmndi:BPMNShape>
@@ -373,7 +371,7 @@
         <dc:Bounds x="1059" y="217" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0nomq5u_di" bpmnElement="SequenceFlow_0nomq5u">
-        <di:waypoint x="962" y="1011" />
+        <di:waypoint x="830" y="1011" />
         <di:waypoint x="1042" y="1011" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0k9dgle_di" bpmnElement="SequenceFlow_0k9dgle">
@@ -495,6 +493,21 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="SendTask_0pu0xwf_di" bpmnElement="Task_1y04tpf">
         <dc:Bounds x="1744" y="217" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_03mjsyx_di" bpmnElement="MessageFlow_03mjsyx">
+        <di:waypoint x="780" y="172" />
+        <di:waypoint x="780" y="575" />
+        <di:waypoint x="549" y="575" />
+        <di:waypoint x="549" y="993" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_16sh740_di" bpmnElement="MessageFlow_16sh740">
+        <di:waypoint x="780" y="971" />
+        <di:waypoint x="780" y="826" />
+        <di:waypoint x="896" y="826" />
+        <di:waypoint x="896" y="172" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1x7d80z_di" bpmnElement="Task_1fv2tmf">
+        <dc:Bounds x="730" y="971" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
