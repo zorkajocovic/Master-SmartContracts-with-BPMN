@@ -11,6 +11,8 @@ import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.form.TaskFormData;
 import org.camunda.bpm.engine.runtime.ActivityInstance;
+import org.camunda.bpm.engine.runtime.Execution;
+import org.camunda.bpm.engine.runtime.ExecutionQuery;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,8 @@ public class CamundaController {
 	FormService formService;
 	
 	private String clientIdProcessInstance = "";
+	private String dealerIdProcessInstance = "";
+	private String blockchainIdProcessInstance = "";
 	
 	@GetMapping(path = "/startClientProcess", produces = "application/json")
     public @ResponseBody FormFieldsDto startClientProcess() {
@@ -81,24 +85,25 @@ public class CamundaController {
 		map.put("type", order.getType());
 		
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		String processInstanceId = task.getProcessInstanceId();
-		runtimeService.setVariable(processInstanceId, "customerName", order.getCustomerName());
-		runtimeService.setVariable(processInstanceId, "customerSurame", order.getCustomerSurname());
-		runtimeService.setVariable(processInstanceId, "type", order.getType());
-		runtimeService.setVariable(processInstanceId, "model", order.getModel());
-		runtimeService.setVariable(processInstanceId, "dealerCompany", "Dealer company");
+		String clientPIid = task.getProcessInstanceId();
+		runtimeService.setVariable(clientPIid, "customerName", order.getCustomerName());
+		runtimeService.setVariable(clientPIid, "customerSurame", order.getCustomerSurname());
+		runtimeService.setVariable(clientPIid, "type", order.getType());
+		runtimeService.setVariable(clientPIid, "model", order.getModel());
+		runtimeService.setVariable(clientPIid, "dealerCompany", "Dealer company");
 
 		formService.submitTaskForm(taskId, map);
-		
-		ProcessInstance pi = runtimeService.startProcessInstanceByKey("Dealer_ProcessId");
-		
-		runtimeService.setVariable(pi.getProcessInstanceId(), "customerName", order.getCustomerName());
-		runtimeService.setVariable(pi.getProcessInstanceId(), "customerSurame", order.getCustomerSurname());
-		runtimeService.setVariable(pi.getProcessInstanceId(), "type", order.getType());
-		runtimeService.setVariable(pi.getProcessInstanceId(), "model", order.getModel());
-		runtimeService.setVariable(pi.getProcessInstanceId(), "dealerCompany", "Dealer company");
 
-        return new ResponseEntity<>(HttpStatus.OK);
+		ProcessInstance dealerPI = runtimeService.startProcessInstanceByKey("Dealer_ProcessId");
+		dealerIdProcessInstance = dealerPI.getProcessInstanceId();
+
+		runtimeService.setVariable(dealerPI.getProcessInstanceId(), "customerName", order.getCustomerName());
+		runtimeService.setVariable(dealerPI.getProcessInstanceId(), "customerSurame", order.getCustomerSurname());
+		runtimeService.setVariable(dealerPI.getProcessInstanceId(), "type", order.getType());
+		runtimeService.setVariable(dealerPI.getProcessInstanceId(), "model", order.getModel());
+		runtimeService.setVariable(dealerPI.getProcessInstanceId(), "dealerCompany", "Dealer company");
+		
+		return new ResponseEntity<>(HttpStatus.OK);
     }
 	
 	@PostMapping(path = "/decide/{taskId}", produces = "application/json")
@@ -111,10 +116,160 @@ public class CamundaController {
 		map.put("agree", accepted);
 		formService.submitTaskForm(taskId, map);
 		if(accepted) {
-			ProcessInstance pi = runtimeService.startProcessInstanceByKey("Blockchain_ProcessId");
+			Execution execution = runtimeService.createExecutionQuery()
+					  .processInstanceId(dealerIdProcessInstance)
+					  .activityId("acceptedContract_id")
+					  .singleResult();
+
+			runtimeService.signal(execution.getId());
+			String activeUser = SecurityContextHolder.getContext().getAuthentication().getName();
+			runtimeService.setVariable(dealerIdProcessInstance, "fullname", activeUser);
 		}
         return new ResponseEntity<>(HttpStatus.OK);
     }
+	
+	@PostMapping(path = "/sign/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> sign(@RequestBody String fullName, @PathVariable String taskId) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("fullname", fullName);
+		formService.submitTaskForm(taskId, map);
+		ProcessInstance blockchainPI = runtimeService.startProcessInstanceByKey("Blockchain_ProcessId");
+		blockchainIdProcessInstance = blockchainPI.getProcessInstanceId();
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(path = "/sendDocuments/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> sendDocuments(@RequestBody boolean sent, @PathVariable String taskId) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("sendDocuments", sent);
+		formService.submitTaskForm(taskId, map);
+		
+		if(sent) {
+			Execution execution = runtimeService.createExecutionQuery()
+					  .processInstanceId(clientIdProcessInstance)
+					  .activityId("receiveDocuments_id")
+					  .singleResult();
+			runtimeService.signal(execution.getId());
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(path = "/readDocuments/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> readDocuments(@RequestBody boolean read, @PathVariable String taskId) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("readDocuments", read);
+		formService.submitTaskForm(taskId, map);
+		
+		if(read) {
+			Execution clientExecution = runtimeService.createExecutionQuery()
+					  .processInstanceId(blockchainIdProcessInstance)
+					  .activityId("clientReadDocuments_id")
+					  .singleResult();
+			runtimeService.signal(clientExecution.getId());
+			
+			Execution dealerExecution = runtimeService.createExecutionQuery()
+					  .processInstanceId(dealerIdProcessInstance)
+					  .activityId("readDocs_id")
+					  .singleResult();
+			runtimeService.signal(dealerExecution.getId());
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(path = "/readReceipt/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> readReceipt(@RequestBody boolean read, @PathVariable String taskId) {
+
+		formService.submitTaskForm(taskId, new HashMap<>());
+		
+		if(read) {
+			Execution blockchainExecution = runtimeService.createExecutionQuery()
+					  .processInstanceId(blockchainIdProcessInstance)
+					  .activityId("clientReadReceipt_id")
+					  .singleResult();
+			runtimeService.signal(blockchainExecution.getId());
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(path = "/pickup/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> pickup(@RequestBody boolean pickedUp, @PathVariable String taskId) {
+
+		formService.submitTaskForm(taskId, new HashMap<>());
+
+		if(pickedUp) {
+			Execution blockchainExecution = runtimeService.createExecutionQuery()
+					  .processInstanceId(blockchainIdProcessInstance)
+					  .activityId("deliveryConfirmation_id")
+					  .singleResult();
+			runtimeService.signal(blockchainExecution.getId());
+		}
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(path = "/sendReceipt/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> sendReceipt(@RequestBody boolean sent, @PathVariable String taskId) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("sendReceipt", sent);
+		formService.submitTaskForm(taskId, map);
+		
+		if(sent) {
+			Execution execution = runtimeService.createExecutionQuery()
+					  .processInstanceId(clientIdProcessInstance)
+					  .activityId("receiveReceipt_id")
+					  .singleResult();
+			runtimeService.signal(execution.getId());
+		}
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(path = "/handOverCar/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> handOverCar(@RequestBody boolean sent, @PathVariable String taskId) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("sendCar", sent);
+		formService.submitTaskForm(taskId, map);
+		
+		if(sent) {
+			Execution execution = runtimeService.createExecutionQuery()
+					  .processInstanceId(clientIdProcessInstance)
+					  .activityId("readyCar_id")
+					  .singleResult();
+			runtimeService.signal(execution.getId());
+		}
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(path = "/pay/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> pay(@RequestBody Long price, @PathVariable String taskId) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("price", price);
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		runtimeService.setVariable(task.getProcessInstanceId(), "pay", true);
+		formService.submitTaskForm(taskId, map);
+
+		Execution blockchainExecution = runtimeService.createExecutionQuery()
+				  .processInstanceId(blockchainIdProcessInstance)
+				  .activityId("clientPayed_id")
+				  .singleResult();
+		runtimeService.signal(blockchainExecution.getId());
+		
+		Execution dealerExecution = runtimeService.createExecutionQuery()
+				  .processInstanceId(dealerIdProcessInstance)
+				  .activityId("clientPayedRent_id")
+				  .singleResult();
+		runtimeService.signal(dealerExecution.getId());
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 	
 	@PostMapping(path = "/getSendOfferForm/{taskId}", produces = "application/json")
     public @ResponseBody ResponseEntity<?> sendOffer(@RequestBody OfferDto offer, @PathVariable String taskId) {
@@ -127,7 +282,13 @@ public class CamundaController {
 		map.put("price", offer.getPrice());
 		map.put("contractText", offer.getText());
 		formService.submitTaskForm(taskId, map);
-		
+
+		Execution execution = runtimeService.createExecutionQuery()
+				  .processInstanceId(clientIdProcessInstance)
+				  .activityId("receiveOffer_Id")
+				  .singleResult();
+
+		runtimeService.signal(execution.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 	
@@ -145,12 +306,4 @@ public class CamundaController {
         return new ResponseEntity<List<TaskDto>>(dtos,  HttpStatus.OK);
     }
 	
-	private HashMap<String, Object> mapListToDto(List<FieldDto> list)
-	{
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		for(FieldDto temp : list) {
-			map.put(temp.getFieldId(), temp.getFieldValue());
-		}
-		return map;
-	}
 }

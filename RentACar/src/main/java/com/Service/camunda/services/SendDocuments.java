@@ -10,7 +10,8 @@ public class SendDocuments implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		
-		
+		System.out.print("Sent documents!!!");
+
 	}
 
 }
