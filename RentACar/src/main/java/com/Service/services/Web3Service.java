@@ -11,38 +11,37 @@ import com.Service.contracts.RentAcarContract;
 
 @Service
 public class Web3Service {
-/*
-	  private Web3j web3j = Web3j.build(new HttpService());
 
-	    //Create and Init the default Web3J connection
-	    public void init(String provider) {
-	        this.web3j = Web3j.build(new HttpService(provider));
-	    }
+	private Web3j web3j = null;
+	
+    //Create and Init the default Web3J connection
+    public void init(String provider) {
+        System.out.println("Connecting to Ethereum ...");
+        this.web3j = Web3j.build(new HttpService(provider));
+        System.out.println("Successfuly connected to Ethereum");
+    }
 
-	    public RentAcarContract getDeployedContractAddress() {
+    public RentAcarContract getDeployedContract() {
 
-	        String contractAddress = "";
+        String contractAddress = "";
 
-	        try {
-	        	 Credentials credentials = WalletUtils.loadCredentials(
-	                     "Zorka.12345",
-	                     "D:\\Master_projekat\\Master-SmartContracts-with-BPMN\\UTC--2020-09-27T08-16-03.576000000Z--f3e6721b0974fdd801f74f59f584cee9424d476d.json");
-	             System.out.println("Credentials loaded");
-	             
-	 			RentAcarContract contract = RentAcarContract.deploy(
-	 									            		web3j,
-	 									                    credentials,
-	 									                    new DefaultGasProvider()).send();
+        try {
+        	 Credentials credentials = WalletUtils.loadCredentials(
+                     "Zorka.12345",
+                     "D:\\Master_projekat\\Master-SmartContracts-with-BPMN\\UTC--2020-09-27T08-16-03.576000000Z--f3e6721b0974fdd801f74f59f584cee9424d476d.json");
+             System.out.println("Credentials loaded");
 
-	            contractAddress = contract.getContractAddress();
-	            System.out.println("Smart contract deployed to address " + contractAddress);
-	            return contract;
+ 			RentAcarContract contract = RentAcarContract.deploy(
+ 									            		web3j,
+ 									                    credentials,
+ 									                    new DefaultGasProvider()).send();
 
-	        } catch (Exception ex) {
-	            System.out.println(Constants.PLEASE_SUPPLY_REAL_DATA);
-	            return null;
-	        }
-	    }
-
-	  */
+            contractAddress = contract.getContractAddress();
+            System.out.println("Smart contract deployed to address " + contractAddress);
+            return contract;
+        } catch (Exception ex) {
+            System.out.println("Error occurs");
+            return  null;
+        }
+    }
 }

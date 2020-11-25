@@ -29,16 +29,16 @@ import model.Appuser;
 	@PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<?> post(@RequestBody LoginRequestDto loginRequestDto) {
 		
-		try{
+		try {
 			  Appuser user = userService.getbyEmail(loginRequestDto.getEmail());
-			  if(user != null) {
+			  if (user != null) {
 				  TokenDto tokenDto = userService.generateToken(user.getEmail());
 				  return new ResponseEntity<>(tokenDto, HttpStatus.OK);
 			  }
 			  else {
 					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			  }			  
-			} 
+		} 
 		catch(AuthenticationException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -46,7 +46,7 @@ import model.Appuser;
 	
 	@RequestMapping(value = "/getCurrentUser", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<Appuser> getCurrentUser() {
-		
+
 		Appuser currentUser = userService.getCurrentUser();
         return new ResponseEntity<>(currentUser, HttpStatus.OK);
     }

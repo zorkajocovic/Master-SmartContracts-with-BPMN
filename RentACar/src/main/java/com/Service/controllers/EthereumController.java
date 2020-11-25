@@ -19,7 +19,7 @@ public class EthereumController {
 	@Autowired
 	Web3Service web3Service;
 	
-	/*@CrossOrigin(origins = "http://localhost:4200")
+	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(path = "/initConnection", produces = "application/json")
     public @ResponseBody void initEthereumConnection() {
 		
@@ -27,11 +27,11 @@ public class EthereumController {
 		web3Service.init(provider);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:4200")
+	/*@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping(path = "/deployContract", produces = "application/json")
     public @ResponseBody ResponseEntity<String> deployContract() {
 		
-		RentAcarContract contractAddress = web3Service.getDeployedContractAddress();
+		RentAcarContract contractAddress = web3Service.deployContract();
 		return new ResponseEntity<String>(contractAddress.getContractAddress(),  HttpStatus.OK); 
 	}*/
 }
