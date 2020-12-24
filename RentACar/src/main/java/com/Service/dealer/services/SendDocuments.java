@@ -9,7 +9,7 @@ public class SendDocuments implements JavaDelegate {
 	public void execute(DelegateExecution execution) throws Exception {
 
 		execution.getProcessEngineServices().getRuntimeService()
-		.createMessageCorrelation("Receive documents")
+		.createMessageCorrelation("Receive documents to client")
 		.correlate();
 		System.out.print("Sent documents!!!");
 	}

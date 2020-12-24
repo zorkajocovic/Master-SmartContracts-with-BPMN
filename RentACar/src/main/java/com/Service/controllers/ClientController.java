@@ -58,13 +58,18 @@ public class ClientController {
 		map.put("customerSurname", order.getCustomerSurname());
 		map.put("model", order.getModel());
 		map.put("type", order.getType());
-		
+		map.put("dateFrom", order.getDateFrom());
+		map.put("dateTo", order.getDateTo());
+
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		String clientPIid = task.getProcessInstanceId();
 		runtimeService.setVariable(clientPIid, "customerName", order.getCustomerName());
 		runtimeService.setVariable(clientPIid, "customerSurame", order.getCustomerSurname());
 		runtimeService.setVariable(clientPIid, "type", order.getType());
 		runtimeService.setVariable(clientPIid, "model", order.getModel());
+		runtimeService.setVariable(clientPIid, "dateFrom", order.getDateFrom());
+		runtimeService.setVariable(clientPIid, "dateTo", order.getDateTo());
+
 		runtimeService.setVariable(clientPIid, "dealerCompany", "Dealer company");
 
 		formService.submitTaskForm(taskId, map);
@@ -77,20 +82,10 @@ public class ClientController {
 		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
 		runtimeService.setVariable(task.getProcessInstanceId(), "agree", accepted);
 		HashMap<String, Object> map = new HashMap<>();
-		map.put("agree", accepted);
 		formService.submitTaskForm(taskId, map);
 		
         return new ResponseEntity<>(HttpStatus.OK);
     }
-	
-	@PostMapping(path = "/readDocuments/{taskId}", produces = "application/json")
-    public @ResponseBody ResponseEntity<?> readDocuments(@RequestBody boolean read, @PathVariable String taskId) {
-
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("readDocuments", read);
-		formService.submitTaskForm(taskId, map);
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
 	
 	@PostMapping(path = "/readReceipt/{taskId}", produces = "application/json")
     public @ResponseBody ResponseEntity<?> readReceipt(@RequestBody boolean read, @PathVariable String taskId) {

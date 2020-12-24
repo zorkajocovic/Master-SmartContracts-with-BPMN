@@ -41,6 +41,7 @@ public class DealerController {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("price", offer.getPrice());
 		map.put("contractText", offer.getText());
+		map.put("deposit", offer.getDeposit());
 		map.put("date", new Date().toLocaleString());
 		
 		String activeUser = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -53,22 +54,25 @@ public class DealerController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 	
-	@PostMapping(path = "/sign/{taskId}", produces = "application/json")
-    public @ResponseBody ResponseEntity<?> sign(@RequestBody String fullName, @PathVariable String taskId) {
+	@PostMapping(path = "/calcDamagePrice/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> calcDamagePrice(@RequestBody Long damagePrice, @PathVariable String taskId) {
 
 		HashMap<String, Object> map = new HashMap<>();
-		map.put("fullname", fullName);
-		formService.submitTaskForm(taskId, map);
+		map.put("damagePrice", damagePrice);
 
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-	
-	@PostMapping(path = "/sendDocuments/{taskId}", produces = "application/json")
-    public @ResponseBody ResponseEntity<?> sendDocuments(@RequestBody boolean sent, @PathVariable String taskId) {
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		Long deposit = (Long) runtimeService.getVariable(task.getProcessInstanceId(), "deposit");
+		Long basePrice = (Long) runtimeService.getVariable(task.getProcessInstanceId(), "price");
 
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("send", sent);
-		formService.submitTaskForm(taskId, map);
+		Long totalPrice;
+		//vec je placen depozit, dakle ostaje samo osnovica sa stetom
+		if(damagePrice > deposit) 
+			totalPrice = basePrice + damagePrice - deposit;
+		else 
+			totalPrice = basePrice - damagePrice;
+		
+		runtimeService.setVariable(task.getProcessInstanceId(), "totalPrice", totalPrice);
+		formService.submitTaskForm(taskId, map);	
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
@@ -102,6 +106,24 @@ public class DealerController {
 
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("sendCar", sent);
+		formService.submitTaskForm(taskId, map);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}	
+	
+	@PostMapping(path = "/readyCar/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> readyCar(@RequestBody boolean ready, @PathVariable String taskId) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("readyCar", ready);
+		formService.submitTaskForm(taskId, map);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(path = "/carCheck/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> carCheck(@RequestBody boolean damaged, @PathVariable String taskId) {
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("hasDamage", damaged);
 		formService.submitTaskForm(taskId, map);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}	

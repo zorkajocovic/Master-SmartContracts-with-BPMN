@@ -24,7 +24,7 @@ public class EthereumController {
     public @ResponseBody void initEthereumConnection() {
 		
 		String provider = "https://kovan.infura.io/v3/bf0fc3e14b23466e9c0cea210b78abdc";   //or local (ganache, geth...)
-		web3Service.init(provider);
+		//web3Service.init(provider);
 	}
 	
 	/*@CrossOrigin(origins = "http://localhost:4200")

@@ -8,14 +8,16 @@ import org.springframework.stereotype.Service;
 import com.Service.services.Web3Service;
 
 @Service
-public class PayedRent implements JavaDelegate {
-	
+public class ReadyCar implements JavaDelegate {
+
 	@Autowired
 	Web3Service web3Service;
 	
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
-
+		
+		Long deposit = (Long) execution.getVariable("deposit");
+		//web3Service.changeReadyAndInsertDeposit(true, deposit);
 
 	}
 

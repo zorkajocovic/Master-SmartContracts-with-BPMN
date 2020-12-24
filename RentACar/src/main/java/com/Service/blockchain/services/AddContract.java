@@ -6,7 +6,6 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import com.Service.contracts.RentAcarContract;
 import com.Service.services.Web3Service;
@@ -20,9 +19,8 @@ public class AddContract implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 		
-		System.out.print("Uspjesno startovan bloackchain proces!!!");
+		System.out.print("Uspjesno startovan blockchain proces!!!");
 		web3Service.init("https://kovan.infura.io/v3/bf0fc3e14b23466e9c0cea210b78abdc");
-		//RentAcarContract contract = web3Service.getDeployedContract();
 		
 		String customerName = execution.getVariable("customerName").toString();
 		String customerSurname = execution.getVariable("customerSurame").toString();
@@ -31,8 +29,14 @@ public class AddContract implements JavaDelegate {
 		String date = execution.getVariable("date").toString();
 		String model = execution.getVariable("model").toString();
 		String type = execution.getVariable("type").toString();
-		BigInteger price = BigInteger.valueOf((Long)execution.getVariable("price"));
+		String dateFrom = execution.getVariable("dateFrom").toString();
+		String dateTo = execution.getVariable("dateTo").toString();
+		Long deposit = (Long) execution.getVariable("deposit");
 
-		//contract.setContract(customerName, customerSurname, dealerCompany, price, contractText, date).send();
+		BigInteger price = BigInteger.valueOf((Long)execution.getVariable("price"));
+		
+		//RentAcarContract contract = web3Service.deployContract(customerName, customerSurname, dealerCompany, price, contractText, date);
+		//execution.setVariable("contractAddress", contract.getContractAddress());
+		//RentAcarContract contract = web3Service.loadContract("0x9463e757340b80931BDCf10046Cc604Ce1ebc05a");
 	}
 }

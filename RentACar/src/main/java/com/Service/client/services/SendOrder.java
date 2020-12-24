@@ -13,13 +13,17 @@ public class SendOrder implements JavaDelegate {
 		String customerSurame = execution.getVariable("customerSurame").toString();
 		String type = execution.getVariable("type").toString();
 		String model = execution.getVariable("model").toString();
+		String dateFrom = execution.getVariable("dateFrom").toString();
+		String dateTo = execution.getVariable("dateTo").toString();
 
 		execution.getProcessEngineServices().getRuntimeService()
-				.createMessageCorrelation("Send order")
+				.createMessageCorrelation("sent order")
 				.setVariable("customerName", customerName)
 				.setVariable("customerSurame", customerSurame)
 				.setVariable("type", type)
 				.setVariable("model", model)
+				.setVariable("dateFrom", dateFrom)
+				.setVariable("dateTo", dateTo)
 				.correlate();
 		
 		System.out.print("Sent order!!!");

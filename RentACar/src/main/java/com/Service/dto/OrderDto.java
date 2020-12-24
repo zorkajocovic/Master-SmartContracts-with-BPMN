@@ -1,14 +1,37 @@
 package com.Service.dto;
 
+import java.util.Date;
+
 public class OrderDto {
 	
 	public String customerName;
 	
-	public String customerSurname;
+	public String customerSurame;
 	
 	public String type;
 	
 	public String model;
+	
+	public String dateFrom;
+	
+	public String dateTo;
+
+	public String getDateFrom() {
+		return dateFrom;
+	}
+
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	public String getDateTo() {
+		return dateTo;
+	}
+
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
+	}
+
 	
 	public String getCustomerName() {
 		return customerName;
@@ -19,11 +42,11 @@ public class OrderDto {
 	}
 	
 	public String getCustomerSurname() {
-		return customerSurname;
+		return customerSurame;
 	}
 	
 	public void setCustomerSurname(String customerSurname) {
-		this.customerSurname = customerSurname;
+		this.customerSurame = customerSurname;
 	}
 	
 	public String getType() {

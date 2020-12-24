@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 import com.Service.services.Web3Service;
 
 @Service
-public class PayedRent implements JavaDelegate {
-	
+public class ReturnedCar implements JavaDelegate {
+
 	@Autowired
 	Web3Service web3Service;
 	
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
 
-
+		//web3Service.carReturned(true);	
+		System.out.print("Returned car - blockchain!!!");
 	}
-
 }
